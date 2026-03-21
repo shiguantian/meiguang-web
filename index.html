@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的待办清单</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .add-btn {
+      padding: 15px 30px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .add-btn:hover {
+      background: #ff5252;
+      transform: scale(1.05);
+    }
+    .todo-list {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      cursor: grab;
+      transition: background 0.2s;
+    }
+    .todo-item:hover {
+      background: #f8f9fa;
+    }
+    .todo-item.dragging {
+      opacity: 0.5;
+      background: #e3f2fd;
+    }
+    .todo-item:last-child {
+      border-bottom: none;
+    }
+    .todo-item.completed .todo-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .todo-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #667eea;
+      border-radius: 50%;
+      margin-right: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .todo-checkbox:hover {
+      background: #e8eaf6;
+    }
+    .todo-item.completed .todo-checkbox {
+      background: #667eea;
+    }
+    .todo-checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      display: none;
+    }
+    .todo-item.completed .todo-checkbox::after {
+      display: block;
+    }
+    .todo-text {
+      flex: 1;
+      font-size: 16px;
+      color: #333;
+    }
+    .delete-btn {
+      padding: 8px 15px;
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .todo-item:hover .delete-btn {
+      opacity: 1;
+    }
+    .delete-btn:hover {
+      background: #ff3344;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      padding: 15px;
+      background: #f8f9fa;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 我的待办清单</h1>
+    <div class="input-group">
+      <input type="text" id="todoInput" placeholder="添加新任务..." onkeypress="handleEnter(event)">
+      <button class="add-btn" onclick="addTodo()">添加</button>
+    </div>
+    <div class="todo-list">
+      <div id="todoList"></div>
+    </div>
+    <div class="stats">
+      <span>总计: <strong id="totalCount">0</strong></span>
+      <span>已完成: <strong id="completedCount">0</strong></span>
+    </div>
+  </div>
+
+  <script>
+    let todos = JSON.parse(localStorage.getItem('vibeTodoList') || '[]');
+    let dragSrcEl = null;
+
+    function saveTodos() {
+      localStorage.setItem('vibeTodoList', JSON.stringify(todos));
+      renderTodos();
+    }
+
+    function addTodo() {
+      const input = document.getElementById('todoInput');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      todos.push({
+        id: Date.now(),
+        text: text,
+        completed: false
+      });
+      input.value = '';
+      saveTodos();
+    }
+
+    function handleEnter(event) {
+      if (event.key === 'Enter') addTodo();
+    }
+
+    function toggleTodo(id) {
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = !todo.completed;
+        saveTodos();
+      }
+    }
+
+    function deleteTodo(id) {
+      todos = todos.filter(t => t.id !== id);
+      saveTodos();
+    }
+
+    function renderTodos() {
+      const list = document.getElementById('todoList');
+      
+      document.getElementById('totalCount').textContent = todos.length;
+      document.getElementById('completedCount').textContent = todos.filter(t => t.completed).length;
+      
+      if (todos.length === 0) {
+        list.innerHTML = '<div class="empty-state">暂无任务，添加一个吧！</div>';
+        return;
+      }
+      
+      list.innerHTML = todos.map(todo => `
+        <div class="todo-item ${todo.completed ? 'completed' : ''}" 
+             draggable="true" data-id="${todo.id}">
+          <div class="todo-checkbox" onclick="toggleTodo(${todo.id})"></div>
+          <span class="todo-text">${escapeHtml(todo.text)}</span>
+          <button class="delete-btn" onclick="deleteTodo(${todo.id})">删除</button>
+        </div>
+      `).join('');
+      
+      setupDragAndDrop();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function setupDragAndDrop() {
+      const items = document.querySelectorAll('.todo-item');
+      items.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.addEventListener('dragend', handleDragEnd);
+      });
+    }
+
+    function handleDragStart(e) {
+      dragSrcEl = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDrop(e) {
+      if (e.stopPropagation) e.stopPropagation();
+      
+      if (dragSrcEl !== this) {
+        const srcId = parseInt(dragSrcEl.dataset.id);
+        const targetId = parseInt(this.dataset.id);
+        
+        const srcIndex = todos.findIndex(t => t.id === srcId);
+        const targetIndex = todos.findIndex(t => t.id === targetId);
+        
+        const [removed] = todos.splice(srcIndex, 1);
+        todos.splice(targetIndex, 0, removed);
+        saveTodos();
+      }
+      return false;
+    }
+
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+    }
+
+    renderTodos();
+  </script>
+</body>
+</html>
