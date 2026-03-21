@@ -6,12 +6,7 @@
   <title>深圳市美光之谷触控科技有限公司 - ACF导电胶膜专业供应商</title>
   <meta name="description" content="专业提供日立、索尼、特来福思(TELEPHUS)各型号ACF导电胶膜，技术支持与服务">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --primary: #1a365d;
       --secondary: #2c5282;
@@ -19,15 +14,12 @@
       --light: #f7fafc;
       --dark: #1a202c;
     }
-    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif;
       line-height: 1.6;
       color: var(--dark);
       background: #fff;
     }
-    
-    /* Header */
     header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
@@ -38,7 +30,6 @@
       z-index: 1000;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
     .header-content {
       max-width: 1200px;
       margin: 0 auto;
@@ -47,7 +38,6 @@
       justify-content: space-between;
       align-items: center;
     }
-    
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
@@ -55,7 +45,6 @@
       align-items: center;
       gap: 0.5rem;
     }
-    
     .logo-icon {
       width: 40px;
       height: 40px;
@@ -66,38 +55,49 @@
       justify-content: center;
       font-weight: bold;
     }
-    
+    nav { position: relative; }
     nav a {
       color: white;
       text-decoration: none;
       margin-left: 2rem;
       transition: opacity 0.3s;
+      display: inline-block;
     }
-    
-    nav a:hover {
-      opacity: 0.8;
+    nav a:hover { opacity: 0.8; }
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      top: 100%;
+      left: 0;
+      margin-top: 0.5rem;
     }
-    
-    /* Hero */
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a {
+      color: var(--dark);
+      padding: 12px 16px;
+      display: block;
+      margin: 0;
+      border-bottom: 1px solid #eee;
+    }
+    .dropdown-content a:last-child { border-bottom: none; }
+    .dropdown-content a:hover { background: var(--light); }
+    .dropdown > a::after {
+      content: ' ▼';
+      font-size: 0.7em;
+    }
     .hero {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
       padding: 8rem 2rem 4rem;
       text-align: center;
     }
-    
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    
-    .hero p {
-      font-size: 1.25rem;
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto 2rem;
-    }
-    
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2rem; }
     .hero-cta {
       display: inline-block;
       background: var(--accent);
@@ -108,42 +108,31 @@
       font-weight: bold;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    
     .hero-cta:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(229, 62, 62, 0.3);
     }
-    
-    /* Sections */
     section {
       padding: 4rem 2rem;
       max-width: 1200px;
       margin: 0 auto;
     }
-    
     .section-title {
       text-align: center;
       margin-bottom: 3rem;
     }
-    
     .section-title h2 {
       font-size: 2rem;
       color: var(--primary);
       margin-bottom: 0.5rem;
     }
-    
-    .section-title p {
-      color: #718096;
-    }
-    
-    /* About */
+    .section-title p { color: #718096; }
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
       align-items: center;
     }
-    
     .about-img {
       width: 100%;
       height: 300px;
@@ -154,25 +143,17 @@
       justify-content: center;
       font-size: 4rem;
     }
-    
     .about-content h3 {
       font-size: 1.5rem;
       color: var(--primary);
       margin-bottom: 1rem;
     }
-    
-    .about-content p {
-      color: #4a5568;
-      margin-bottom: 1rem;
-    }
-    
-    /* Products */
+    .about-content p { color: #4a5568; margin-bottom: 1rem; }
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
     }
-    
     .product-card {
       background: white;
       border-radius: 16px;
@@ -180,12 +161,10 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    
     .product-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     }
-    
     .product-img {
       width: 100%;
       height: 200px;
@@ -195,26 +174,18 @@
       justify-content: center;
       font-size: 3rem;
     }
-    
-    .product-info {
-      padding: 1.5rem;
+    .product-info { padding: 1.5rem; }
+    .product-info h3 { color: var(--primary); margin-bottom: 0.5rem; }
+    .product-info p { color: #718096; font-size: 0.9rem; }
+    .product-info a {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
     }
-    
-    .product-info h3 {
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .product-info p {
-      color: #718096;
-      font-size: 0.9rem;
-    }
-    
-    /* Brands */
-    .brands {
-      background: var(--light);
-    }
-    
+    .product-info a:hover { text-decoration: underline; }
+    .brands { background: var(--light); }
     .brands-grid {
       display: flex;
       justify-content: center;
@@ -222,7 +193,6 @@
       flex-wrap: wrap;
       gap: 3rem;
     }
-    
     .brand-item {
       text-align: center;
       padding: 2rem 3rem;
@@ -230,97 +200,51 @@
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    
     .brand-logo {
       font-size: 2rem;
       font-weight: bold;
       color: var(--primary);
       margin-bottom: 0.5rem;
     }
-    
-    .brand-name {
-      color: #718096;
-      font-size: 0.9rem;
-    }
-    
-    /* Contact */
+    .brand-name { color: #718096; font-size: 0.9rem; }
     .contact {
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white;
     }
-    
     .contact .section-title h2,
-    .contact .section-title p {
-      color: white;
-    }
-    
+    .contact .section-title p { color: white; }
     .contact-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
       text-align: center;
     }
-    
     .contact-item {
       padding: 2rem;
       background: rgba(255,255,255,0.1);
       border-radius: 12px;
     }
-    
-    .contact-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .contact-item h3 {
-      margin-bottom: 0.5rem;
-    }
-    
-    .contact-item p {
-      opacity: 0.9;
-    }
-    
-    /* Footer */
+    .contact-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .contact-item h3 { margin-bottom: 0.5rem; }
+    .contact-item p { opacity: 0.9; }
     footer {
       background: var(--dark);
       color: white;
       text-align: center;
       padding: 2rem;
     }
-    
-    footer p {
-      opacity: 0.7;
-    }
-    
-    /* Responsive */
+    footer p { opacity: 0.7; }
     @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-      
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      nav {
-        display: flex;
-        gap: 1rem;
-      }
-      
-      nav a {
-        margin-left: 0;
-      }
+      .hero h1 { font-size: 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .header-content { flex-direction: column; gap: 1rem; }
+      nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+      nav a { margin: 0.5rem; }
+      .dropdown-content { position: static; box-shadow: none; }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="header-content">
       <div class="logo">
@@ -329,7 +253,16 @@
       </div>
       <nav>
         <a href="#about">关于我们</a>
-        <a href="#products">产品中心</a>
+        <div class="dropdown">
+          <a href="products.html">产品与服务 ▾</a>
+          <div class="dropdown-content">
+            <a href="sony.html">Sony索尼ACF导电胶</a>
+            <a href="hitachi.html">Hitachi日立ACF导电胶</a>
+            <a href="telephus.html">Telephus特来福思ACF导电胶</a>
+            <a href="fuji.html">Fuji富士感压纸/硅胶皮</a>
+            <a href="cleaner.html">ACF去除液/IC清洗剂/蓝胶</a>
+          </div>
+        </div>
         <a href="#services">服务支持</a>
         <a href="#brands">合作品牌</a>
         <a href="#contact">联系我们</a>
@@ -337,14 +270,12 @@
     </div>
   </header>
 
-  <!-- Hero -->
   <section class="hero">
     <h1>ACF导电胶膜专业供应商</h1>
     <p>集合日立（HITACHI）、索尼（SONY）、特来福思（TELEPHUS）优质厂商的ACF产品与技术支持</p>
     <a href="#contact" class="hero-cta">立即咨询</a>
   </section>
 
-  <!-- About -->
   <section id="about">
     <div class="section-title">
       <h2>关于美光之谷</h2>
@@ -354,47 +285,62 @@
       <div class="about-content">
         <h3>深圳市美光之谷触控科技有限公司</h3>
         <p>美光之谷是一家专业从事ACF（各向异性导电胶膜）销售与技术服务的公司。我们致力于为触摸屏、显示模组、半导体等行业提供高品质的导电连接材料。</p>
-        <p>公司汇聚行业精英，拥有多年经验的技術团队，为客户提供选型指导、工艺优化、售后支持等全方位服务。</p>
+        <p>公司汇聚行业精英，拥有多年经验的技术团队，为客户提供选型指导、工艺优化、售后支持等全方位服务。</p>
         <p>我们始终坚持"客户至上、质量第一"的经营理念，与国内外众多知名企业建立了长期稳定的合作关系。</p>
       </div>
-      <div class="about-img">
-        🏭
-      </div>
+      <div class="about-img">🏭</div>
     </div>
   </section>
 
-  <!-- Products -->
   <section id="products">
     <div class="section-title">
-      <h2>产品中心</h2>
+      <h2>产品与服务</h2>
       <p>涵盖多种规格型号，满足不同应用需求</p>
     </div>
     <div class="products-grid">
       <div class="product-card">
         <div class="product-img">📦</div>
         <div class="product-info">
-          <h3>ACF导电胶膜</h3>
-          <p>各向异性导电胶膜，适用于LCD、OLED、触摸屏等显示模组的邦定连接</p>
+          <h3>Sony索尼ACF导电胶</h3>
+          <p>适用于中小型/大型FPD、Chip On Glass、Film On Glass等多种工艺</p>
+          <a href="sony.html">查看详情 →</a>
         </div>
       </div>
       <div class="product-card">
-        <div class="product-img">🔧</div>
+        <div class="product-img">📦</div>
         <div class="product-info">
-          <h3>ACF替代方案</h3>
-          <p>提供多种ACF替代产品，满足不同客户的成本和性能需求</p>
+          <h3>Hitachi日立ACF导电胶</h3>
+          <p>适用于触摸屏TP、模组等多种结构，型号齐全</p>
+          <a href="hitachi.html">查看详情 →</a>
         </div>
       </div>
       <div class="product-card">
-        <div class="product-img">🛠️</div>
+        <div class="product-img">📦</div>
         <div class="product-info">
-          <h3>技术支持</h3>
-          <p>专业的技术团队提供选型建议、工艺调试、良率优化等服务</p>
+          <h3>Telephus特来福思ACF</h3>
+          <p>细间距互连，高粘附性，高可靠性</p>
+          <a href="telephus.html">查看详情 →</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">📄</div>
+        <div class="product-info">
+          <h3>Fuji富士感压纸/硅胶皮</h3>
+          <p>压力测量胶片、热压硅胶皮</p>
+          <a href="fuji.html">查看详情 →</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">🧪</div>
+        <div class="product-info">
+          <h3>ACF去除液/IC清洗剂</h3>
+          <p>TP厂产品返工专用清洗剂</p>
+          <a href="cleaner.html">查看详情 →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Services -->
   <section id="services">
     <div class="section-title">
       <h2>服务支持</h2>
@@ -432,7 +378,6 @@
     </div>
   </section>
 
-  <!-- Brands -->
   <section id="brands" class="brands">
     <div class="section-title">
       <h2>合作品牌</h2>
@@ -440,25 +385,24 @@
     </div>
     <div class="brands-grid">
       <div class="brand-item">
-        <div class="brand-logo">HITACHI</div>
-        <div class="brand-name">日立</div>
-      </div>
-      <div class="brand-item">
         <div class="brand-logo">SONY</div>
         <div class="brand-name">索尼</div>
+      </div>
+      <div class="brand-item">
+        <div class="brand-logo">HITACHI</div>
+        <div class="brand-name">日立</div>
       </div>
       <div class="brand-item">
         <div class="brand-logo">TELEPHUS</div>
         <div class="brand-name">特来福思</div>
       </div>
       <div class="brand-item">
-        <div class="brand-logo">3M</div>
-        <div class="brand-name">3M</div>
+        <div class="brand-logo">Fuji</div>
+        <div class="brand-name">富士</div>
       </div>
     </div>
   </section>
 
-  <!-- Contact -->
   <section id="contact" class="contact">
     <div class="section-title">
       <h2>联系我们</h2>
@@ -483,7 +427,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
     <p>© 2026 深圳市美光之谷触控科技有限公司 版权所有</p>
   </footer>

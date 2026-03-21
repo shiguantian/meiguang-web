@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产品与服务 - 深圳市美光之谷触控科技有限公司</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #1a365d; --secondary: #2c5282; --accent: #e53e3e; --light: #f7fafc; --dark: #1a202c; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif; line-height: 1.6; color: var(--dark); background: #fff; }
+    header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 1rem 0; position: fixed; width: 100%; top: 0; z-index: 1000; }
+    .header-content { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
+    .logo a { color: white; text-decoration: none; }
+    .logo-icon { width: 40px; height: 40px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    nav a { color: white; text-decoration: none; margin-left: 2rem; }
+    .breadcrumb { background: var(--light); padding: 1rem 2rem; margin-top: 60px; }
+    .content { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    h1 { color: var(--primary); font-size: 2rem; margin-bottom: 2rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+    .product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.3s; text-decoration: none; color: inherit; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+    .product-img { width: 100%; height: 180px; background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .product-info { padding: 1.5rem; }
+    .product-info h3 { color: var(--primary); margin-bottom: 0.5rem; }
+    .product-info p { color: #718096; font-size: 0.9rem; }
+    footer { background: var(--dark); color: white; text-align: center; padding: 2rem; margin-top: 3rem; }
+    footer p { opacity: 0.7; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo"><div class="logo-icon"><a href="index.html">M</a></div><span><a href="index.html">美光之谷</a></span></div>
+      <nav><a href="index.html">首页</a><a href="#products">产品与服务</a><a href="index.html#contact">联系我们</a></nav>
+    </div>
+  </header>
+  <div class="breadcrumb"><a href="index.html">首页</a> › 产品与服务</div>
+  <div class="content">
+    <h1>产品与服务</h1>
+    <div class="products-grid">
+      <a href="sony.html" class="product-card">
+        <div class="product-img">📦</div>
+        <div class="product-info"><h3>Sony索尼ACF导电胶</h3><p>适用于中小型/大型FPD、Chip On Glass、Film On Glass等多种工艺</p></div>
+      </a>
+      <a href="hitachi.html" class="product-card">
+        <div class="product-img">📦</div>
+        <div class="product-info"><h3>Hitachi日立ACF导电胶</h3><p>适用于触摸屏TP、模组等多种结构，型号齐全</p></div>
+      </a>
+      <a href="telephus.html" class="product-card">
+        <div class="product-img">📦</div>
+        <div class="product-info"><h3>Telephus特来福思ACF</h3><p>细间距互连，高粘附性，高可靠性</p></div>
+      </a>
+      <a href="fuji.html" class="product-card">
+        <div class="product-img">📄</div>
+        <div class="product-info"><h3>Fuji富士感压纸/硅胶皮</h3><p>压力测量胶片、热压硅胶皮</p></div>
+      </a>
+      <a href="cleaner.html" class="product-card">
+        <div class="product-img">🧪</div>
+        <div class="product-info"><h3>ACF去除液/IC清洗剂</h3><p>TP厂产品返工专用清洗剂</p></div>
+      </a>
+    </div>
+  </div>
+  <footer><p>© 2026 深圳市美光之谷触控科技有限公司 版权所有</p></footer>
+</body>
+</html>
