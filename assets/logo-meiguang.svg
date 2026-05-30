@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" role="img" aria-labelledby="title desc">
+  <title id="title">深圳市美光之谷触控科技有限公司</title>
+  <desc id="desc">美光之谷新品牌标识</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f63b6"/>
+      <stop offset="0.55" stop-color="#1ba6a6"/>
+      <stop offset="1" stop-color="#7fc242"/>
+    </linearGradient>
+  </defs>
+  <rect width="420" height="120" rx="18" fill="#fff"/>
+  <g transform="translate(22 22)">
+    <path d="M8 69 39 8l31 61h-15L39 36 23 69Z" fill="#0b2d4d"/>
+    <path d="M42 69 73 8l31 61H88L73 37 57 69Z" fill="url(#g)" opacity=".95"/>
+    <path d="M37 53h42" stroke="#1ba6a6" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="39" cy="28" r="5" fill="#7fc242"/>
+    <circle cx="74" cy="28" r="5" fill="#0f63b6"/>
+  </g>
+  <g fill="#12212f" transform="translate(142 33)">
+    <text x="0" y="34" font-family="PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="34" font-weight="800">美光之谷</text>
+    <text x="2" y="64" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2" fill="#547084">MEIGUANG TOUCH MATERIALS</text>
+  </g>
+</svg>
