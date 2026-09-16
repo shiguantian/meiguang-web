@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Bot,
@@ -151,6 +151,17 @@ function applyPromptToSite(site, prompt) {
     next.plan = "Business";
   }
 
+  if (prompt.includes("网站") || prompt.includes("建站") || prompt.includes("官网")) {
+    next.status = "草稿";
+    next.pages = [
+      { name: "首页", path: "/", state: "草稿" },
+      { name: "产品与服务", path: "/products", state: "草稿" },
+      { name: "解决方案", path: "/solutions", state: "草稿" },
+      { name: "关于我们", path: "/about", state: "草稿" },
+      { name: "联系我们", path: "/contact", state: "草稿" },
+    ];
+  }
+
   return next;
 }
 
@@ -173,10 +184,16 @@ function App() {
     "site-002": [{ id: "v1", title: "创建站点草稿", time: "2026-09-15 19:20", author: "AI 建站", state: "草稿" }],
   });
   const [deploying, setDeploying] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const site = useMemo(() => sites.find((item) => item.id === activeId) ?? sites[0], [activeId, sites]);
   const messages = messagesBySite[site.id] ?? createStarterMessages(site.name);
   const versions = versionsBySite[site.id] ?? [];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+  }, [messages.length, site.id, generating]);
 
   function updateSite(nextSite) {
     setSites((current) => current.map((item) => (item.id === nextSite.id ? nextSite : item)));
@@ -210,6 +227,7 @@ function App() {
     setTab("build");
     setDraft("");
     setDeploying(false);
+    setGenerating(false);
     setSiteMessages(nextSite.id, createStarterMessages(nextSite.name));
     setVersionsBySite((current) => ({
       ...current,
@@ -219,29 +237,41 @@ function App() {
 
   function sendPrompt(prompt = draft) {
     const clean = prompt.trim();
-    if (!clean) return;
+    if (!clean || generating) return;
 
-    const nextSite = applyPromptToSite(site, clean);
-    updateSite(nextSite);
     setMessagesBySite((current) => ({
       ...current,
       [site.id]: [
         ...(current[site.id] ?? []),
         { role: "user", text: clean },
-        {
-          role: "assistant",
-          text: buildAssistantReply(clean, nextSite),
-        },
       ],
     }));
-    addVersion(site.id, {
-      id: `v${versions.length + 13}`,
-      title: clean.length > 18 ? `${clean.slice(0, 18)}...` : clean,
-      time: "刚刚",
-      author: "AI 编辑",
-      state: "草稿",
-    });
     setDraft("");
+    setGenerating(true);
+
+    window.setTimeout(() => {
+      const nextSite = applyPromptToSite(site, clean);
+      updateSite(nextSite);
+      appendMessage(site.id, {
+        role: "assistant",
+        text: buildAssistantReply(clean, nextSite),
+      });
+      addVersion(site.id, {
+        id: `v${versions.length + 13}`,
+        title: clean.length > 18 ? `${clean.slice(0, 18)}...` : clean,
+        time: "刚刚",
+        author: "AI 编辑",
+        state: "草稿",
+      });
+      setGenerating(false);
+    }, 420);
+  }
+
+  function handleComposerKeyDown(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendPrompt();
+    }
   }
 
   function buildAssistantReply(prompt, nextSite) {
@@ -354,11 +384,18 @@ function App() {
                     <p>{message.text}</p>
                   </div>
                 ))}
+                {generating && (
+                  <div className="message assistant thinking">
+                    <span>AI</span>
+                    <p>正在分析需求并更新站点...</p>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
 
               <div className="quick-prompts">
                 {quickPrompts.map((prompt) => (
-                  <button key={prompt} onClick={() => sendPrompt(prompt)}>
+                  <button type="button" key={prompt} onClick={() => sendPrompt(prompt)}>
                     {prompt}
                   </button>
                 ))}
@@ -368,11 +405,12 @@ function App() {
                 <textarea
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
+                  onKeyDown={handleComposerKeyDown}
                   placeholder="例如：把首页做得更高端，新增产品分类，并发布到 nginx 云服务器"
                 />
-                <button onClick={() => sendPrompt()}>
+                <button type="button" onClick={() => sendPrompt()} disabled={!draft.trim() || generating}>
                   <MessageSquareText size={18} />
-                  发送
+                  {generating ? "生成中" : "发送"}
                 </button>
               </div>
             </section>

@@ -266,6 +266,11 @@ button {
   opacity: 0.72;
 }
 
+.composer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .builder-grid {
   display: grid;
   grid-template-columns: minmax(320px, 0.85fr) minmax(520px, 1.4fr) minmax(260px, 0.7fr);
@@ -324,6 +329,12 @@ button {
   align-self: flex-end;
   color: #fff;
   background: #1f5360;
+}
+
+.message.thinking {
+  color: #35505a;
+  background: #eef8f6;
+  border: 1px solid #c9ebe4;
 }
 
 .message span {
