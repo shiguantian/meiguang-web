@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import {
   Bot,
   CheckCircle2,
-  ChevronRight,
   CloudUpload,
   Code2,
   CreditCard,
@@ -77,6 +76,39 @@ const initialMessages = [
   },
 ];
 
+function createStarterMessages(siteName) {
+  return [
+    {
+      role: "assistant",
+      text: `已创建「${siteName}」草稿站点。请告诉我企业名称、行业、主营产品、想要的风格、栏目和发布目标，我会生成可预览的网站初版。`,
+    },
+  ];
+}
+
+function createDraftSite(index) {
+  return {
+    id: `site-${Date.now()}`,
+    name: `未命名 AI 站点 ${index}`,
+    domain: `draft-${index}.buildpilot.cn`,
+    industry: "待配置行业",
+    plan: "Starter",
+    status: "草稿",
+    updatedAt: "刚刚",
+    theme: "business",
+    heroTitle: "告诉 AI 你的业务，自动生成专业网站",
+    heroLead: "输入企业名称、产品服务、目标客户和风格偏好后，平台会生成页面结构、文案、视觉方向和发布计划。",
+    accent: "#2563eb",
+    pages: [
+      { name: "首页", path: "/", state: "草稿" },
+      { name: "产品与服务", path: "/products", state: "草稿" },
+      { name: "关于我们", path: "/about", state: "草稿" },
+      { name: "联系我们", path: "/contact", state: "草稿" },
+    ],
+    products: ["核心产品", "服务能力", "客户案例", "联系咨询"],
+    publishTarget: "未配置云服务",
+  };
+}
+
 const versionsSeed = [
   { id: "v12", title: "首页文案生产化修正", time: "2026-09-16 15:42", author: "AI + 人工确认", state: "已发布" },
   { id: "v11", title: "产品中心新增分切机分类", time: "2026-09-16 14:18", author: "AI 编辑", state: "可回滚" },
@@ -129,17 +161,60 @@ function addPage(pages, page) {
 function App() {
   const [sites, setSites] = useState(starterSites);
   const [activeId, setActiveId] = useState(initialSite.id);
-  const [messages, setMessages] = useState(initialMessages);
+  const [messagesBySite, setMessagesBySite] = useState({
+    [initialSite.id]: initialMessages,
+    "site-002": createStarterMessages("锐成精密装备"),
+  });
   const [draft, setDraft] = useState("");
   const [device, setDevice] = useState("desktop");
   const [tab, setTab] = useState("build");
-  const [versions, setVersions] = useState(versionsSeed);
+  const [versionsBySite, setVersionsBySite] = useState({
+    [initialSite.id]: versionsSeed,
+    "site-002": [{ id: "v1", title: "创建站点草稿", time: "2026-09-15 19:20", author: "AI 建站", state: "草稿" }],
+  });
   const [deploying, setDeploying] = useState(false);
 
   const site = useMemo(() => sites.find((item) => item.id === activeId) ?? sites[0], [activeId, sites]);
+  const messages = messagesBySite[site.id] ?? createStarterMessages(site.name);
+  const versions = versionsBySite[site.id] ?? [];
 
   function updateSite(nextSite) {
     setSites((current) => current.map((item) => (item.id === nextSite.id ? nextSite : item)));
+  }
+
+  function appendMessage(siteId, message) {
+    setMessagesBySite((current) => ({
+      ...current,
+      [siteId]: [...(current[siteId] ?? []), message],
+    }));
+  }
+
+  function setSiteMessages(siteId, nextMessages) {
+    setMessagesBySite((current) => ({
+      ...current,
+      [siteId]: nextMessages,
+    }));
+  }
+
+  function addVersion(siteId, version) {
+    setVersionsBySite((current) => ({
+      ...current,
+      [siteId]: [version, ...(current[siteId] ?? [])],
+    }));
+  }
+
+  function createNewSite() {
+    const nextSite = createDraftSite(sites.length + 1);
+    setSites((current) => [nextSite, ...current]);
+    setActiveId(nextSite.id);
+    setTab("build");
+    setDraft("");
+    setDeploying(false);
+    setSiteMessages(nextSite.id, createStarterMessages(nextSite.name));
+    setVersionsBySite((current) => ({
+      ...current,
+      [nextSite.id]: [{ id: "v1", title: "创建站点草稿", time: "刚刚", author: "AI 建站", state: "草稿" }],
+    }));
   }
 
   function sendPrompt(prompt = draft) {
@@ -148,24 +223,24 @@ function App() {
 
     const nextSite = applyPromptToSite(site, clean);
     updateSite(nextSite);
-    setMessages((current) => [
+    setMessagesBySite((current) => ({
       ...current,
-      { role: "user", text: clean },
-      {
-        role: "assistant",
-        text: buildAssistantReply(clean, nextSite),
-      },
-    ]);
-    setVersions((current) => [
-      {
-        id: `v${current.length + 13}`,
-        title: clean.length > 18 ? `${clean.slice(0, 18)}...` : clean,
-        time: "刚刚",
-        author: "AI 编辑",
-        state: "草稿",
-      },
-      ...current,
-    ]);
+      [site.id]: [
+        ...(current[site.id] ?? []),
+        { role: "user", text: clean },
+        {
+          role: "assistant",
+          text: buildAssistantReply(clean, nextSite),
+        },
+      ],
+    }));
+    addVersion(site.id, {
+      id: `v${versions.length + 13}`,
+      title: clean.length > 18 ? `${clean.slice(0, 18)}...` : clean,
+      time: "刚刚",
+      author: "AI 编辑",
+      state: "草稿",
+    });
     setDraft("");
   }
 
@@ -182,18 +257,12 @@ function App() {
   function startPublish() {
     setDeploying(true);
     updateSite({ ...site, status: "发布中", updatedAt: "刚刚" });
-    setMessages((current) => [
-      ...current,
-      { role: "assistant", text: "发布任务已启动：正在构建静态站点并准备上传到 nginx 云服务器。" },
-    ]);
+    appendMessage(site.id, { role: "assistant", text: "发布任务已启动：正在构建静态站点并准备上传到 nginx 云服务器。" });
 
     window.setTimeout(() => {
       updateSite({ ...site, status: "已发布", updatedAt: "刚刚" });
       setDeploying(false);
-      setVersions((current) => [
-        { id: `v${current.length + 20}`, title: "云服务器自动发布", time: "刚刚", author: "发布流水线", state: "已发布" },
-        ...current,
-      ]);
+      addVersion(site.id, { id: `v${versions.length + 20}`, title: "云服务器自动发布", time: "刚刚", author: "发布流水线", state: "已发布" });
     }, 1200);
   }
 
@@ -210,7 +279,7 @@ function App() {
           </div>
         </div>
 
-        <button className="new-site">
+        <button className="new-site" onClick={createNewSite}>
           <Wand2 size={18} />
           新建 AI 站点
         </button>
